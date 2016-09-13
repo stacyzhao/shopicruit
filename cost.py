@@ -13,7 +13,7 @@ def get_product(data):
         return data['products']
 
 
-def get_total(data):
+def get_total_per_page(data):
     total = 0
     products = data['products']
     for x in products:
@@ -23,20 +23,24 @@ def get_total(data):
     return total
 
 
-def main():
+def get_total(data):
     page = 0
     total_cost = 0
-    invalid = True
-    data = get_url(page)
-    get_total(data)
-    while invalid:
+    while True:
         if len(get_product(data)) != 0:
             page += 1
             data = get_url(page)
-            total_cost += get_total(data)
+            total_cost += get_total_per_page(data)
         else:
-            invalid = False
+            break
     print(round(total_cost, 2))
+
+
+def main():
+    page = 0
+    data = get_url(page)
+    get_total_per_page(data)
+    get_total(data)
 
 
 if __name__ == '__main__':
