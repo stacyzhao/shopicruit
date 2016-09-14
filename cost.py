@@ -1,11 +1,10 @@
 import requests
 
 
-def get_url(page):
+def get_data(page):
     url = "http://shopicruit.myshopify.com/products.json?page=" + str(page)
     response = requests.get(url)
-    data = response.json()
-    return data
+    return response.json()
 
 
 def get_total_per_page(data):
@@ -16,23 +15,18 @@ def get_total_per_page(data):
     return total
 
 
-def get_total(data):
-    page = 0
+def main():
+    page = 1
     total_cost = 0
     while True:
-        if len(data['products']) != 0:
-            page += 1
-            data = get_url(page)
-            total_cost += get_total_per_page(data)
-        else:
+        data = get_data(page)
+        # we don't know if there are more pages so check to see if this result is empty
+        if len(data['products']) == 0:
             break
+
+        total_cost += get_total_per_page(data)
+        page += 1
     print("Total cost:", round(total_cost, 2))
-
-
-def main():
-    data = get_url(0)
-    get_total(data)
-    get_total_per_page(data)
 
 
 if __name__ == '__main__':
