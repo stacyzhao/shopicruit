@@ -9,9 +9,10 @@ def get_data(page):
 
 def get_total_per_page(data):
     total = 0
-    for product in data['products']:
-        for variant in product['variants']:
-            total += float(variant['price'])
+    for product in data["products"]:
+        if product["product_type"].lower() == "watch" or product["product_type"].lower() == "clock":
+            for variant in product["variants"]:
+                total += float(variant["price"])
     return total
 
 
@@ -21,15 +22,13 @@ def main():
     while True:
         data = get_data(page)
         # we don't know if there are more pages so check to see if this result is empty
-        if len(data['products']) == 0:
+        if len(data["products"]) == 0:
             break
 
         total_cost += get_total_per_page(data)
         page += 1
-    print("Total cost:", round(total_cost, 2))
+    print("Total cost: {}".format(round(total_cost, 2)))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-
-# The total cost of all watches and clocks is $28156.04
